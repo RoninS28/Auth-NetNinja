@@ -38,6 +38,19 @@ userSchema.pre('save', function (doc, next) {//here doc is the mongodb doc from 
     next() //next takes the code to the next middleware
 })
 
+// static method to login the user - since mongoose does not come with a defined function to login the user
+userSchema.statics.login = async function (email, password) {
+    const user = await this.findOne({ email });
+    if (user) {
+        const auth = await bcrypt.compare(password, user.password) // bcrypt does then hashing under the hood for arg1 for us
+        if (auth) {
+            return user
+        }
+        throw Error('Incorrect password')
+    }
+    throw Error('Incorrect email')
+}
+
 
 const User = mongoose.model('User', userSchema)
 module.exports = User

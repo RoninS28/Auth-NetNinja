@@ -15,9 +15,14 @@
 
         <script>
             const form = document.querySelector('form');
+            const emailError = document.querySelector('.email.error')
+            const passwordError = document.querySelector('.password.error')
 
             form.addEventListener('submit', async (e) => {
                 e.preventDefault();
+                // reset errors
+                emailError.textContent = ''
+                passwordError.textContent = ''
 
                 // get values
                 const email = form.email.value;
@@ -32,6 +37,14 @@
                         }),
                         headers: { 'Content-Type': application / json }
                     })
+                    const data = await res.json()
+                    if (data.errors) { //i.e if errors are present and coming from the server
+                        emailError.textContent = data.errors.email
+                        passwordError.textContent = data.errors.password
+                    }
+                    if (data.user) {
+                        location.assign('/') // this will reidrect the user to the homepage
+                    }
                 } catch (err) {
 
                 }

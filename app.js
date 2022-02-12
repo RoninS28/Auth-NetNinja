@@ -26,7 +26,7 @@ app.use(authRoutes)
 
 
 // cookies
-app.get('/set-cookies', (req, res) => {
+/*app.get('/set-cookies', (req, res) => {
   // res.setHeader('Set-Cookie', 'newUser=true')
 
   res.cookie('newUser', false)
@@ -39,4 +39,4 @@ app.get('/set-cookies', (req, res) => {
 app.get('/read-cookies', (req, res) => {
   const cookies = req.cookies
   res.json(cookies)
-})
+})*/
