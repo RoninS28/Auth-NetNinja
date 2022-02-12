@@ -1,4 +1,5 @@
 const User = require('../models/User')
+const jwt = require('jsonwebtoken')
 
 // handle errors
 const handleErrors = (err) => {
@@ -22,6 +23,16 @@ const handleErrors = (err) => {
 
 }
 
+const maxAge = 3 * 24 * 60 * 60 //3 days
+// JWT
+// how jwt works is that it takes the header and payload, adds the signature and creates a secret string
+// here ronin secret signature is the signature used to verify at the server that the jwt is coming from the app itself
+const createToken = (id) => {
+    return jwt.sign({ id }, 'ronin secret signature', {
+        expiresIn: maxAge
+    })
+}
+
 
 module.exports.signup_get = (req, res) => {
     res.render('signup')
@@ -36,7 +47,9 @@ module.exports.signup_post = async (req, res) => {
 
     try {
         const user = await User.create({ email, password })
-        res.status(201).json(user)
+        const token = createToken(user._id)
+        res.cookie('jwt', token, { httpOnly: true, maxAge: maxAge })
+        res.status(201).json({ user: user._id })
     } catch (err) {
         const errors = handleErrors(err)
         res.status(400).json({ errors })
