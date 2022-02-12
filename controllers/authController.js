@@ -85,3 +85,9 @@ module.exports.login_post = async (req, res) => {
     }
 }
 
+module.exports.logout_get = (req, res) => {
+    // you cannot directly delete a cookie. instead we create a new cookie with the same name
+    // in that case, it replaces the preious cookie and we set the expiry very short
+    res.cookie('jwt', '', { maxAge: 1 })
+    res.redirect('/')
+}
